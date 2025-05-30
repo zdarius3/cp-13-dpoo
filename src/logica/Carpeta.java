@@ -90,8 +90,8 @@ public class Carpeta extends Elemento {
 			}
 			else {
 				ficherosTemp = ((Carpeta)e).getTodosLosFicheros();
-				for(int i = 0; i < ficherosTemp.size(); i++) {
-					ficheros.add(ficherosTemp.get(i));
+				for(Fichero f: ficherosTemp) {
+					ficheros.add(f);
 				}
 			}
 		}
