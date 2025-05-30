@@ -58,9 +58,11 @@ public class Carpeta extends Elemento {
 
 	//inciso e
 	public ArrayList<Fichero> getFicherosMenorTam() {
-		ArrayList<Fichero> todosFicheros = getTodosLosFicheros();
 		ArrayList<Fichero> ficherosMenorTam = new ArrayList<Fichero>();
+		
+		ArrayList<Fichero> todosFicheros = getTodosLosFicheros();
 		double menorTam = buscarMenorTamFichero();
+		
 		for (Fichero f: todosFicheros) {
 			if (f.getTamanno() == menorTam) {
 				ficherosMenorTam.add(f);
@@ -71,18 +73,9 @@ public class Carpeta extends Elemento {
 
 	public double buscarMenorTamFichero() {
 		double menorTam = Double.MAX_VALUE;
-		for (Elemento e: elementos) {
-			if (e instanceof Fichero) {
-				if (((Fichero)e).getTamanno() < menorTam) {
-					menorTam = ((Fichero)e).getTamanno();
-				}
-			}
-			else {
-				for (Fichero f: ((Carpeta)e).getTodosLosFicheros()) {
-					if (f.getTamanno() < menorTam) {
-						menorTam = f.getTamanno();
-					}
-				}
+		for (Fichero f: getTodosLosFicheros()) {
+			if (f.getTamanno() < menorTam) {
+				menorTam = f.getTamanno();
 			}
 		}
 		return menorTam;
