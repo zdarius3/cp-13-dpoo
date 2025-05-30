@@ -46,4 +46,10 @@ public class Sistema {
 	public ArrayList<Fichero> getFicherosMenorTamEnRaiz() {
 		return raiz.getFicherosMenorTam();
 	}
+	
+	
+	//inciso f
+	public ArrayList<Fichero> getTodosFicherosMenorTam() {
+		return raiz.getTodosFicherosMenorTam();
+	}
 }

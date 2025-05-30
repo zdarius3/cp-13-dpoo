@@ -59,10 +59,55 @@ public class Carpeta extends Elemento {
 	//inciso e
 	public ArrayList<Fichero> getFicherosMenorTam() {
 		ArrayList<Fichero> ficherosMenorTam = new ArrayList<Fichero>();
-		
+		double menorTam = Double.MAX_VALUE;
+		for (Elemento e: elementos) {
+			if (e instanceof Fichero) {
+				if (((Fichero)e).getTamanno() < menorTam) {
+					ficherosMenorTam.clear();
+					ficherosMenorTam.add((Fichero)e);
+					menorTam = ((Fichero)e).getTamanno();
+				}
+				else if (((Fichero)e).getTamanno() == menorTam) {
+					ficherosMenorTam.add((Fichero)e);
+				}
+			}
+		}
+		return ficherosMenorTam;
+	}
+
+	//inciso f
+	public ArrayList<Fichero> getTodosFicherosMenorTam2() {
+		ArrayList<Fichero> ficherosMenorTam = new ArrayList<Fichero>();
+		double menorTam = Double.MAX_VALUE;
+		for (Elemento e: elementos) {
+			if (e instanceof Fichero) {
+				if (((Fichero)e).getTamanno() < menorTam) {
+					ficherosMenorTam.clear();
+					ficherosMenorTam.add((Fichero)e);
+					menorTam = ((Fichero)e).getTamanno();
+				}
+				else if(((Fichero)e).getTamanno() == menorTam) {
+					ficherosMenorTam.add((Fichero)e);
+				}
+			}
+			else {
+				ArrayList<Fichero> ficherosTemp = ((Carpeta)e).getTodosFicherosMenorTam();
+				for (Fichero f: ficherosTemp) {
+					ficherosMenorTam.add(f);
+				}
+			}
+		}
+		return ficherosMenorTam;
+	}
+
+
+	//inciso f mal
+	public ArrayList<Fichero> getTodosFicherosMenorTam() {
+		ArrayList<Fichero> ficherosMenorTam = new ArrayList<Fichero>();
+
 		ArrayList<Fichero> todosFicheros = getTodosLosFicheros();
 		double menorTam = buscarMenorTamFichero();
-		
+
 		for (Fichero f: todosFicheros) {
 			if (f.getTamanno() == menorTam) {
 				ficherosMenorTam.add(f);
