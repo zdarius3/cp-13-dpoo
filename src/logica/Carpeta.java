@@ -127,20 +127,20 @@ public class Carpeta extends Elemento {
 	}
 
 	public ArrayList<Fichero> getTodosLosFicheros() {
-		ArrayList<Fichero> ficheros = new ArrayList<Fichero>();
+		ArrayList<Fichero> todosFicheros = new ArrayList<Fichero>();
 		ArrayList<Fichero> ficherosTemp = new ArrayList<Fichero>();
 		for (Elemento e: elementos) {
 			if (e instanceof Fichero) {
-				ficheros.add((Fichero)e);
+				todosFicheros.add((Fichero)e);
 			}
 			else {
 				ficherosTemp = ((Carpeta)e).getTodosLosFicheros();
-				for(int i = 0; i < ficherosTemp.size(); i++) {
-					ficheros.add(ficherosTemp.get(i));
+				for(Fichero f: ficherosTemp) {
+					todosFicheros.add(f);
 				}
 			}
 		}
-		return ficheros;
+		return todosFicheros;
 	}
 }
 
