@@ -52,4 +52,19 @@ public class Sistema {
 	public ArrayList<Fichero> getTodosFicherosMenorTam() {
 		return raiz.getTodosFicherosMenorTam();
 	}
+	
+	//para la interfaz
+	public ArrayList<String> getExtensionesFicheros() {
+		return raiz.getExtTodosLosFicheros();
+	}
+	
+	public ArrayList<String> getExtensionesCarpetas() {
+		return raiz.getExtTodasCarpetas();
+	}
+	
+	public ArrayList<String> getNombresCarpetas() {
+		return raiz.getNombresTodasCarpetas();
+	}
+	
+	
 }
