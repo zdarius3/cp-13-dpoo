@@ -7,6 +7,8 @@ import logica.*;
 import java.awt.EventQueue;
 
 
+
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -22,6 +24,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class CarpetaInterior extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -87,22 +91,38 @@ public class CarpetaInterior extends JFrame {
 		contentPane.add(panelElem);
 		
 		JButton btnNewButton = new JButton("Copiar");
+		btnNewButton.setFocusable(false);
 		btnNewButton.setBounds(122, 427, 89, 23);
 		contentPane.add(btnNewButton);
 		
 		JButton btnCopiar = new JButton("Mover");
+		btnCopiar.setFocusable(false);
 		btnCopiar.setBounds(234, 427, 89, 23);
 		contentPane.add(btnCopiar);
 		
 		JButton btnNewButton_1 = new JButton("Editar");
+		btnNewButton_1.setFocusable(false);
 		btnNewButton_1.setBounds(349, 427, 89, 23);
 		contentPane.add(btnNewButton_1);
 		
 		JButton btnEditar = new JButton("Eliminar");
+		btnEditar.setFocusable(false);
 		btnEditar.setBounds(460, 427, 89, 23);
 		contentPane.add(btnEditar);
 		
 		JButton btnCrear = new JButton("Crear");
+		btnCrear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					CrearElemento dialog = new CrearElemento(carpeta, modeloElem);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);	
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		btnCrear.setFocusable(false);
 		btnCrear.setBounds(10, 427, 89, 23);
 		contentPane.add(btnCrear);
 	}

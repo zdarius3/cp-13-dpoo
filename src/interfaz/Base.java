@@ -4,6 +4,7 @@ import logica.*;
 
 import java.time.LocalDate;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -19,12 +20,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JButton;
 
+import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
@@ -47,7 +50,7 @@ public class Base extends JFrame {
 		c2.addElemento(new Fichero("fichero3", ".docx", LocalDate.now(), 150.0));
 		c2.addElemento(new Fichero("fichero5", ".txt", LocalDate.now(), 20.0)); //para probar el inciso d
 		c2.addElemento(new Fichero("fichero6", ".txt", LocalDate.now(), 20.0));
-		c2interior.addElemento(new Fichero ("fichero4", ".xls", LocalDate.now(), 20));
+		c2interior.addElemento(new Fichero ("fichero4", ".xls", LocalDate.now(), 5));
 		c2.addElemento(c2interior);
 
 		sistema.addElemento(c1);
@@ -66,7 +69,7 @@ public class Base extends JFrame {
 		contentPane.setLayout(null);
 		setLocationRelativeTo(null);
 
-		JScrollPane panelElem = new JScrollPane();
+		final JScrollPane panelElem = new JScrollPane();
 		panelElem.setBounds(10, 39, 539, 375);
 		contentPane.add(panelElem);
 		//crear tabla custom
@@ -111,7 +114,17 @@ public class Base extends JFrame {
 		menuBar.setBounds(0, 0, 549, 21);
 		contentPane.add(menuBar);
 		
-		JMenu mnReportes = new JMenu("Reportes");
+		final JMenu mnReportes = new JMenu("Reportes");
+		mnReportes.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				mnReportes.setForeground(Color.GRAY);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				mnReportes.setForeground(Color.BLACK);
+			}
+		});
 		menuBar.add(mnReportes);
 		
 		JMenuItem mntmCantidadTotalDe = new JMenuItem("Cantidad total de kilobytes en el sistema");
@@ -126,8 +139,14 @@ public class Base extends JFrame {
 		JMenuItem mntmCantidadDeElementos = new JMenuItem("Cantidad de elementos de una extensi\u00F3n dada en una carpeta espec\u00EDfica");
 		mntmCantidadDeElementos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				PedirDatosReporte2 p = new PedirDatosReporte2(sistema);
-				p.setVisible(true);
+					try {
+						PedirDatosReporte2 dialog = new PedirDatosReporte2(sistema);
+						dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						dialog.setVisible(true);
+					} catch (Exception e) {
+						e.printStackTrace();	
+				}
+
 			}
 		});
 		mnReportes.add(mntmCantidadDeElementos);
@@ -150,8 +169,18 @@ public class Base extends JFrame {
 		});
 		mnReportes.add(mntmElementosDeMenor_1);
 		
-		JMenu mnInformacin = new JMenu("Informaci\u00F3n");
-		menuBar.add(mnInformacin);
+		final JMenu mnInformacion = new JMenu("Informaci\u00F3n");
+		mnInformacion.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				mnInformacion.setForeground(Color.GRAY);
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				mnInformacion.setForeground(Color.BLACK);
+			}
+		});
+		menuBar.add(mnInformacion);
 		
 		JMenuItem mntmcmoUsar = new JMenuItem("\u00BFC\u00F3mo usar?");
 		mntmcmoUsar.addActionListener(new ActionListener() {
@@ -159,7 +188,7 @@ public class Base extends JFrame {
 				JOptionPane.showMessageDialog(null, "Aquí te explico cómo usar el programita");
 			}
 		});
-		mnInformacin.add(mntmcmoUsar);
+		mnInformacion.add(mntmcmoUsar);
 		
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mntmAcercaDe.addActionListener(new ActionListener() {
@@ -168,7 +197,7 @@ public class Base extends JFrame {
 						+ ", hecho por Damian Romero Alvarez del grupo IF-13.");
 			}
 		});
-		mnInformacin.add(mntmAcercaDe);
+		mnInformacion.add(mntmAcercaDe);
 		
 		JButton btnNewButton = new JButton("Copiar");
 		btnNewButton.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
@@ -195,6 +224,17 @@ public class Base extends JFrame {
 		contentPane.add(btnEditar);
 		
 		JButton btnCrear = new JButton("Crear");
+		btnCrear.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					CrearElemento dialog = new CrearElemento(sistema.getRaiz(), modeloElem);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);	
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		btnCrear.setFocusable(false);
 		btnCrear.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnCrear.setBounds(10, 425, 89, 23);

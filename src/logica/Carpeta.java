@@ -32,35 +32,48 @@ public class Carpeta extends Elemento {
 	//inciso d
 	public int contarFicherosEnCarpetaEsp(String extFichero, String nomCarpeta, String extCarpeta) {
 		int cantFicheros = 0;
-		Carpeta encontrada = buscarPrimeraCarpeta(nomCarpeta, extCarpeta);
+		Carpeta encontrada = buscarPrimeraCarpeta(elementos, nomCarpeta, extCarpeta);
 
-		for (Elemento e2: encontrada.getElementos()) {
-			if (e2 instanceof Fichero) {
-				if (e2.getExtension().equals(extFichero)) {
-					cantFicheros++;
+		if (encontrada != null) {
+			for (Elemento e2: encontrada.getElementos()) {
+				if (e2 instanceof Fichero) {
+					if (e2.getExtension().equals(extFichero)) {
+						cantFicheros++;
+					}
 				}
 			}
+		}
+		else {
+			throw new NullPointerException("No se encontró una carpeta así");
 		}
 		return cantFicheros;
 	}
 
-	private Carpeta buscarPrimeraCarpeta(String nombre, String extension) {
-		Carpeta encontrada = new Carpeta("null", "null", LocalDate.now());
+	private Carpeta buscarPrimeraCarpeta(ArrayList<Elemento> elementos, String nombre, String extension) {
 		boolean encont = false;
-        int i = 0;
-		while (!encont && i < elementos.size()) {
-			Elemento e = elementos.get(i);
-			if (e instanceof Carpeta) {
-				if (e.getExtension().equals(extension) &&  e.getNombre().equals(nombre)) {
-					encontrada = (Carpeta) e;
+		Carpeta aux = null;
+		Carpeta encontrada = null;
+		Carpeta encontradaInterior = null;
+		int i = 0;
+		while(!encont && i < elementos.size()) {
+			if (elementos.get(i) instanceof Carpeta) {
+				aux = (Carpeta) elementos.get(i);
+				if (aux.getNombre().equals(nombre) && aux.getExtension().equals(extension)) {
+					encontrada = aux;
 					encont = true;
 				}
+				if (!encont) {
+					encontradaInterior = buscarPrimeraCarpeta(aux.getElementos(), nombre, extension);
+					if (encontradaInterior != null) {
+						encontrada = encontradaInterior;
+					}
+				}
 			}
-
 			i++;
 		}
 		return encontrada;
 	}
+
 
 	//inciso e
 	public ArrayList<Fichero> getFicherosMenorTam() {
@@ -169,13 +182,13 @@ public class Carpeta extends Elemento {
 		}
 		return extensiones;
 	}
-	
+
 	public ArrayList<String> getNombresTodasCarpetas() {
 		ArrayList<String> nombres = new ArrayList<String>();
 		getNombresCarpetasEnCarpeta(this, nombres);
 		return nombres;
 	}
-	
+
 	private ArrayList<String> getNombresCarpetasEnCarpeta(Carpeta carpeta, ArrayList<String> nombres) {
 		boolean yaContiene;
 		for (Elemento e: carpeta.getElementos()) {
@@ -200,7 +213,7 @@ public class Carpeta extends Elemento {
 		getExtCarpetasEnCarpeta(this, extensiones);
 		return extensiones;
 	}
-	
+
 	private ArrayList<String> getExtCarpetasEnCarpeta(Carpeta carpeta, ArrayList<String> extensiones) {
 		boolean yaContiene;
 		for (Elemento e: carpeta.getElementos()) {
