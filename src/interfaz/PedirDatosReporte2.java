@@ -29,15 +29,7 @@ public class PedirDatosReporte2 extends JDialog {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(Sistema sistema) {
-		try {
-			PedirDatosReporte2 dialog = new PedirDatosReporte2(sistema);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 
 	/**
 	 * Create the dialog.
@@ -93,14 +85,19 @@ public class PedirDatosReporte2 extends JDialog {
 				String extensionFichero = (String)extFich.getSelectedItem();
 				String nombreCarpeta = (String)nomCarp.getSelectedItem();
 				String extensionCarpeta = (String)extCarp.getSelectedItem();
-				int cantidad = sistema.getCantFicherosPrimCarpeta(extensionFichero, nombreCarpeta, extensionCarpeta);
-				if (cantidad > 0) {
-					JOptionPane.showMessageDialog(null, "La cantidad de ficheros con la extensión (" + extensionFichero + 
-							") encontrados en la carpeta de nombre (" + nombreCarpeta + ") y extensión (" + extensionCarpeta +
-							") es de: " + cantidad);
+				try {
+					int cantidad = sistema.getCantFicherosPrimCarpeta(extensionFichero, nombreCarpeta, extensionCarpeta);
+					if (cantidad > 0) {
+						JOptionPane.showMessageDialog(null, "La cantidad de ficheros con la extensión (" + extensionFichero + 
+								") encontrados en la carpeta de nombre (" + nombreCarpeta + ") y extensión (" + extensionCarpeta +
+								") es de: " + cantidad);
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "No se encontraron ficheros con las características indicadas.");
+					}
 				}
-				else {
-					JOptionPane.showMessageDialog(null, "No se encontraron ficheros con las características indicadas.");
+				catch (Exception e){
+					JOptionPane.showMessageDialog(null, "No se encontró una carpeta con esas características.");
 				}
 			}
 		});

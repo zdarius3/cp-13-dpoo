@@ -39,32 +39,32 @@ public class Sistema {
 
 	//inciso d
 	public int getCantFicherosPrimCarpeta(String extFichero, String nomCarpeta, String extCarpeta) {
-		return raiz.contarFicherosEnCarpetaEsp(extFichero, nomCarpeta, extCarpeta);
+		int cant = -1;
+		cant = raiz.contarFicherosEnCarpetaEsp(extFichero, nomCarpeta, extCarpeta);
+		return cant;
 	}
-	
+
 	//inciso e
 	public ArrayList<Fichero> getFicherosMenorTamEnRaiz() {
 		return raiz.getFicherosMenorTam();
 	}
-	
-	
+
+
 	//inciso f
 	public ArrayList<Fichero> getTodosFicherosMenorTam() {
 		return raiz.getTodosFicherosMenorTam();
 	}
-	
+
 	//para la interfaz
 	public ArrayList<String> getExtensionesFicheros() {
 		return raiz.getExtTodosLosFicheros();
 	}
-	
+
 	public ArrayList<String> getExtensionesCarpetas() {
 		return raiz.getExtTodasCarpetas();
 	}
-	
+
 	public ArrayList<String> getNombresCarpetas() {
 		return raiz.getNombresTodasCarpetas();
-	}
-	
-	
+	}	
 }
