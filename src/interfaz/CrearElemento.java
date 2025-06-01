@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.ButtonGroup;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
@@ -23,6 +24,8 @@ import java.time.LocalDate;
 import logica.Carpeta;
 import logica.Fichero;
 
+import javax.swing.border.TitledBorder;
+
 public class CrearElemento extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -31,7 +34,9 @@ public class CrearElemento extends JDialog {
 	private JTextField txtExt;
 
 
-	public CrearElemento(final Carpeta carpeta, final ElementoTableModel e) {
+	public CrearElemento(JFrame base, final Carpeta carpeta, final ElementoTableModel e) {
+		super(base, true);
+		setLocationRelativeTo(base);
 		setTitle("Crear elemento");
 		setBounds(100, 100, 325, 260);
 		getContentPane().setLayout(new BorderLayout());
@@ -40,11 +45,11 @@ public class CrearElemento extends JDialog {
 		contentPanel.setLayout(null);
 
 		JLabel lblElementoACrear = new JLabel("Elemento a crear:");
-		lblElementoACrear.setBounds(22, 26, 141, 14);
+		lblElementoACrear.setBounds(22, 20, 141, 14);
 		contentPanel.add(lblElementoACrear);
 
 		final JSpinner spinnerTam = new JSpinner();
-		spinnerTam.setBounds(131, 132, 153, 22);
+		spinnerTam.setBounds(131, 138, 132, 22);
 		contentPanel.add(spinnerTam); 
 		spinnerTam.setEnabled(false);
 
@@ -56,7 +61,7 @@ public class CrearElemento extends JDialog {
 				}
 			}
 		});
-		rdbtnFichero.setBounds(219, 22, 72, 23);
+		rdbtnFichero.setBounds(219, 16, 72, 23);
 		contentPanel.add(rdbtnFichero);
 
 		final JRadioButton rdbtnCarpeta = new JRadioButton("Carpeta");
@@ -67,7 +72,8 @@ public class CrearElemento extends JDialog {
 				}
 			}
 		});
-		rdbtnCarpeta.setBounds(131, 22, 72, 23);
+		rdbtnCarpeta.setBounds(131, 16, 72, 23);
+		rdbtnCarpeta.setSelected(true);
 		contentPanel.add(rdbtnCarpeta);
 
 		ButtonGroup grupoBtn = new ButtonGroup();
@@ -75,25 +81,25 @@ public class CrearElemento extends JDialog {
 		grupoBtn.add(rdbtnCarpeta);
 
 		final JLabel lblNombre = new JLabel("Nombre:");
-		lblNombre.setBounds(22, 65, 141, 14);
+		lblNombre.setBounds(35, 73, 141, 14);
 		contentPanel.add(lblNombre);
 
 		txtNombre = new JTextField();
-		txtNombre.setBounds(131, 62, 153, 22);
+		txtNombre.setBounds(131, 70, 132, 22);
 		contentPanel.add(txtNombre);
 		txtNombre.setColumns(10);
 
 		final JLabel lblExtensin = new JLabel("Extensi\u00F3n:");
-		lblExtensin.setBounds(22, 102, 141, 14);
+		lblExtensin.setBounds(35, 108, 141, 14);
 		contentPanel.add(lblExtensin);
 
 		txtExt = new JTextField();
 		txtExt.setColumns(10);
-		txtExt.setBounds(131, 97, 153, 22);
+		txtExt.setBounds(131, 103, 132, 22);
 		contentPanel.add(txtExt);
 
 		JLabel lblTamao = new JLabel("Tama\u00F1o:");
-		lblTamao.setBounds(22, 136, 141, 14);
+		lblTamao.setBounds(35, 142, 141, 14);
 		contentPanel.add(lblTamao);
 
 		JButton btnCrear = new JButton("Crear");
@@ -124,7 +130,7 @@ public class CrearElemento extends JDialog {
 				}
 			}
 		});
-		btnCrear.setBounds(49, 176, 89, 23);
+		btnCrear.setBounds(49, 185, 89, 23);
 		contentPanel.add(btnCrear);
 
 		JButton btnCancelar = new JButton("Cancelar");		
@@ -135,7 +141,12 @@ public class CrearElemento extends JDialog {
 				spinnerTam.setValue((double) 0);
 			}
 		});
-		btnCancelar.setBounds(175, 176, 89, 23);
+		btnCancelar.setBounds(175, 185, 89, 23);
 		contentPanel.add(btnCancelar);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new TitledBorder(null, "Datos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel.setBounds(10, 45, 281, 128);
+		contentPanel.add(panel);
 	}
 }
