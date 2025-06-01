@@ -8,8 +8,11 @@ import java.awt.EventQueue;
 
 
 
+
+
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
@@ -30,12 +33,12 @@ import java.awt.event.ActionEvent;
 public class CarpetaInterior extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	
-	public static void main(final Carpeta carpeta) {
+
+	public static void main(final Sistema s, final ElementoTableModel anterior, final Carpeta carpeta) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CarpetaInterior frame = new CarpetaInterior(carpeta);
+					CarpetaInterior frame = new CarpetaInterior(s, anterior, carpeta);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,8 +47,7 @@ public class CarpetaInterior extends JFrame {
 		});
 	}
 
-	public CarpetaInterior(final Carpeta carpeta) {
-		
+	public CarpetaInterior(final Sistema s, final ElementoTableModel anterior, final Carpeta carpeta) {
 		setTitle("Contenido de " + carpeta.getNombre());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 575, 500);
@@ -64,57 +66,97 @@ public class CarpetaInterior extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
-		            JTable tablaOrig = (JTable) evt.getSource();
-		            int fila = tablaOrig.getSelectedRow();
+					JTable tablaOrig = (JTable) evt.getSource();
+					int fila = tablaOrig.getSelectedRow();
 
-		            Elemento elemento = ((ElementoTableModel) tablaOrig.getModel()).getElemento(fila, carpeta);
+					Elemento elemento = ((ElementoTableModel) tablaOrig.getModel()).getElemento(fila, carpeta);
 
-		            if (elemento instanceof Carpeta) {
-		                final JFrame framePadre = (JFrame) SwingUtilities.getWindowAncestor(tabla);		                
-		                framePadre.setVisible(false);
-		                JFrame frameInterior = new CarpetaInterior((Carpeta) elemento);		                
-		                frameInterior.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		                frameInterior.addWindowListener(new WindowAdapter() {
-		                    @Override
-		                    public void windowClosed(WindowEvent we) {
-		                        framePadre.setVisible(true);
-		                    }
-		                });
-		                
-		                frameInterior.setLocationRelativeTo(null);
-		                frameInterior.setVisible(true);
-		            }
-		        }
-		    }
+					if (elemento instanceof Carpeta) {
+						final JFrame framePadre = (JFrame) SwingUtilities.getWindowAncestor(tabla);		                
+						framePadre.setVisible(false);
+						JFrame frameInterior = new CarpetaInterior(s, anterior, (Carpeta) elemento);		                
+						frameInterior.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+						frameInterior.addWindowListener(new WindowAdapter() {
+							@Override
+							public void windowClosed(WindowEvent we) {
+								framePadre.setVisible(true);
+								modeloElem.cargarDatos(carpeta); //actualizar tamaños
+								modeloElem.fireTableDataChanged();
+							}
+						});
+
+						frameInterior.setLocationRelativeTo(null);
+						frameInterior.setVisible(true);
+					}
+				}
+			}
 		});
 		panelElem.setViewportView(tabla);
 		contentPane.add(panelElem);
-		
-		JButton btnNewButton = new JButton("Copiar");
-		btnNewButton.setFocusable(false);
-		btnNewButton.setBounds(122, 427, 89, 23);
-		contentPane.add(btnNewButton);
-		
-		JButton btnCopiar = new JButton("Mover");
+
+		JButton btnCopiar = new JButton("Copiar");
 		btnCopiar.setFocusable(false);
-		btnCopiar.setBounds(234, 427, 89, 23);
+		btnCopiar.setBounds(122, 427, 89, 23);
 		contentPane.add(btnCopiar);
-		
-		JButton btnNewButton_1 = new JButton("Editar");
-		btnNewButton_1.setFocusable(false);
-		btnNewButton_1.setBounds(349, 427, 89, 23);
-		contentPane.add(btnNewButton_1);
-		
-		JButton btnEditar = new JButton("Eliminar");
+
+		JButton btnMover = new JButton("Mover");
+		btnMover.setFocusable(false);
+		btnMover.setBounds(234, 427, 89, 23);
+		contentPane.add(btnMover);
+
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int selec = tabla.getSelectedRow();
+				if (selec >= 0) {
+					Elemento elemSec = carpeta.getElementos().get(selec);
+					try {
+						ModificarElemento dialog = new ModificarElemento(CarpetaInterior.this, carpeta, modeloElem, elemSec);
+						dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						dialog.setVisible(true);	
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "No se seleccionó ningún elemento.");
+				}
+			}
+		});
 		btnEditar.setFocusable(false);
-		btnEditar.setBounds(460, 427, 89, 23);
+		btnEditar.setBounds(349, 427, 89, 23);
 		contentPane.add(btnEditar);
-		
+
+		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int selec = tabla.getSelectedRow();
+				if (selec >= 0) {
+					int confirm = JOptionPane.showConfirmDialog(null,
+							"¿Estás seguro de eliminar el elemento seleccionado?",
+							"Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						carpeta.getElementos().remove(selec);
+						JOptionPane.showMessageDialog(null, "Elemento eliminado satisfactoriamente.");
+						anterior.cargarDatos(s.getRaiz());
+						anterior.fireTableDataChanged();
+						modeloElem.cargarDatos(carpeta);
+						modeloElem.fireTableDataChanged();				}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "No se seleccionó ningún elemento.");
+				}
+			}
+		});
+		btnEliminar.setFocusable(false);
+		btnEliminar.setBounds(460, 427, 89, 23);
+		contentPane.add(btnEliminar);
+
 		JButton btnCrear = new JButton("Crear");
 		btnCrear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					CrearElemento dialog = new CrearElemento(carpeta, modeloElem);
+					CrearElemento dialog = new CrearElemento(CarpetaInterior.this, carpeta, modeloElem);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);	
 				} catch (Exception e) {

@@ -25,7 +25,8 @@ public class ElementoTableModel extends DefaultTableModel {
 			else {
 				tipo = "Fichero";
 			}
-			Object[] nuevaLinea = new Object[]{e.getNombre(), e.getExtension(), tipo, e.getFechaActualizacion(), e.getTamanno() + " kb"};
+			Object[] nuevaLinea = new Object[]{e.getNombre(), e.getExtension(), tipo, 
+					e.getFechaActualizacion(), e.getTamanno() + " kb"};
 			addRow(nuevaLinea);
 		}
 	}

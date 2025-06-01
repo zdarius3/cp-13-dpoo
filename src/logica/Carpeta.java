@@ -18,6 +18,12 @@ public class Carpeta extends Elemento {
 	public void addElemento(Elemento e) {
 		elementos.add(e);
 	}
+	
+	public void modificar(String nom, String ext) {
+		super.setNombre(nom);
+		super.setExtension(ext);
+		super.setFechaActualizacion(LocalDate.now());
+	}
 
 	//inciso c
 	@Override

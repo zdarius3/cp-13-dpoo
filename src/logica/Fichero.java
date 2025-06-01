@@ -20,5 +20,11 @@ public class Fichero extends Elemento {
 		this.tamanno = tamanno;
 	}
 	
+	public void modificar(String nom, String ext, double tam) {
+		super.setNombre(nom);
+		super.setExtension(ext);
+		super.setFechaActualizacion(LocalDate.now());
+		setTamanno(tam);
+	}
 
 }

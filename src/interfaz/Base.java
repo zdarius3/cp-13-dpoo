@@ -32,7 +32,7 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
 
 public class Base extends JFrame {
-	
+
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -59,7 +59,7 @@ public class Base extends JFrame {
 		sistema.addElemento(new Fichero("fichero8", ".txt", LocalDate.now(), 5.0));
 		sistema.addElemento(new Fichero("fichero9", ".txt", LocalDate.now(), 5.0));
 		sistema.addElemento(new Fichero("fichero10", ".txt", LocalDate.now(), 150.0));
-		
+
 		setTitle("Ra\u00EDz del sistema");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 575, 500);
@@ -79,41 +79,44 @@ public class Base extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				if (evt.getClickCount() == 2) {
-		            JTable tablaOrig = (JTable) evt.getSource();
-		            int fila = tablaOrig.getSelectedRow();
+					JTable tablaOrig = (JTable) evt.getSource();
+					int fila = tablaOrig.getSelectedRow();
 
-		            Elemento elemento = ((ElementoTableModel) tablaOrig.getModel()).getElemento(fila, sistema.getRaiz());
+					Elemento elemento = ((ElementoTableModel) tablaOrig.getModel()).getElemento(fila, sistema.getRaiz());
 
-		            if (elemento instanceof Carpeta) {
-		                final JFrame framePadre = (JFrame) SwingUtilities.getWindowAncestor(tabla);
-		                framePadre.setVisible(false);
-		                
-		                JFrame frameInterior = new CarpetaInterior((Carpeta) elemento);
-		                
-		                frameInterior.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		                
-		                frameInterior.addWindowListener(new WindowAdapter() {
-		                    @Override
-		                    public void windowClosed(WindowEvent we) {
-		                        framePadre.setVisible(true);
-		                    }
-		                });
-		                
-		                frameInterior.setLocationRelativeTo(null);
-		                frameInterior.setVisible(true);
-		            }
-		        }
-		    }
+					if (elemento instanceof Carpeta) {
+						final JFrame framePadre = (JFrame) SwingUtilities.getWindowAncestor(tabla);
+						framePadre.setVisible(false);
+
+						JFrame frameInterior = new CarpetaInterior(sistema, modeloElem, (Carpeta) elemento);
+
+						frameInterior.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+						frameInterior.addWindowListener(new WindowAdapter() {
+							@Override
+							public void windowClosed(WindowEvent we) {
+								framePadre.setVisible(true);
+								modeloElem.cargarDatos(sistema.getRaiz());  //actualizar tamaños
+								modeloElem.fireTableDataChanged();
+							}
+						});
+
+						frameInterior.setLocationRelativeTo(null);
+						frameInterior.setVisible(true);
+					}
+
+				}
+			}
 		});
 		panelElem.setViewportView(tabla);
 		contentPane.add(panelElem);
-		
-		
-		
+
+
+
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBounds(0, 0, 549, 21);
 		contentPane.add(menuBar);
-		
+
 		final JMenu mnReportes = new JMenu("Reportes");
 		mnReportes.addMouseListener(new MouseAdapter() {
 			@Override
@@ -126,31 +129,31 @@ public class Base extends JFrame {
 			}
 		});
 		menuBar.add(mnReportes);
-		
+
 		JMenuItem mntmCantidadTotalDe = new JMenuItem("Cantidad total de kilobytes en el sistema");
 		mntmCantidadTotalDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JOptionPane.showMessageDialog(null, "La cantidad total de kilobytes en el sistema es de: " + 
-			sistema.getTamTotal() + " kilobytes");
+						sistema.getTamTotal() + " kilobytes");
 			}
 		});
 		mnReportes.add(mntmCantidadTotalDe);
-		
+
 		JMenuItem mntmCantidadDeElementos = new JMenuItem("Cantidad de elementos de una extensi\u00F3n dada en una carpeta espec\u00EDfica");
 		mntmCantidadDeElementos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-					try {
-						PedirDatosReporte2 dialog = new PedirDatosReporte2(sistema);
-						dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-						dialog.setVisible(true);
-					} catch (Exception e) {
-						e.printStackTrace();	
+				try {
+					PedirDatosReporte2 dialog = new PedirDatosReporte2(sistema);
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();	
 				}
 
 			}
 		});
 		mnReportes.add(mntmCantidadDeElementos);
-		
+
 		JMenuItem mntmElementosDeMenor = new JMenuItem("Ficheros de menor tama\u00F1o en la ra\u00EDz del sistema");
 		mntmElementosDeMenor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -159,7 +162,7 @@ public class Base extends JFrame {
 			}
 		});
 		mnReportes.add(mntmElementosDeMenor);
-		
+
 		JMenuItem mntmElementosDeMenor_1 = new JMenuItem("Ficheros de menor tama\u00F1o en todo el sistema");
 		mntmElementosDeMenor_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -168,7 +171,7 @@ public class Base extends JFrame {
 			}
 		});
 		mnReportes.add(mntmElementosDeMenor_1);
-		
+
 		final JMenu mnInformacion = new JMenu("Informaci\u00F3n");
 		mnInformacion.addMouseListener(new MouseAdapter() {
 			@Override
@@ -181,7 +184,7 @@ public class Base extends JFrame {
 			}
 		});
 		menuBar.add(mnInformacion);
-		
+
 		JMenuItem mntmcmoUsar = new JMenuItem("\u00BFC\u00F3mo usar?");
 		mntmcmoUsar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -189,7 +192,7 @@ public class Base extends JFrame {
 			}
 		});
 		mnInformacion.add(mntmcmoUsar);
-		
+
 		JMenuItem mntmAcercaDe = new JMenuItem("Acerca de");
 		mntmAcercaDe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -198,36 +201,73 @@ public class Base extends JFrame {
 			}
 		});
 		mnInformacion.add(mntmAcercaDe);
-		
-		JButton btnNewButton = new JButton("Copiar");
-		btnNewButton.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		btnNewButton.setFocusable(false);
-		btnNewButton.setBounds(122, 425, 89, 23);
-		contentPane.add(btnNewButton);
-		
-		JButton btnCopiar = new JButton("Mover");
+
+		JButton btnCopiar = new JButton("Copiar");
 		btnCopiar.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnCopiar.setFocusable(false);
-		btnCopiar.setBounds(234, 425, 89, 23);
+		btnCopiar.setBounds(122, 425, 89, 23);
 		contentPane.add(btnCopiar);
-		
-		JButton btnNewButton_1 = new JButton("Editar");
-		btnNewButton_1.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
-		btnNewButton_1.setFocusable(false);
-		btnNewButton_1.setBounds(349, 425, 89, 23);
-		contentPane.add(btnNewButton_1);
-		
-		JButton btnEditar = new JButton("Eliminar");
+
+		JButton btnMover = new JButton("Mover");
+		btnMover.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		btnMover.setFocusable(false);
+		btnMover.setBounds(234, 425, 89, 23);
+		contentPane.add(btnMover);
+
+		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int selec = tabla.getSelectedRow();
+				if (selec >= 0) {
+					Elemento elemSec = sistema.getRaiz().getElementos().get(selec);
+					try {
+						ModificarElemento dialog = new ModificarElemento(Base.this, sistema.getRaiz(), modeloElem, elemSec);
+						dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+						dialog.setVisible(true);	
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "No se seleccionó ningún elemento.");
+				}
+			}
+		});
 		btnEditar.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnEditar.setFocusable(false);
-		btnEditar.setBounds(460, 425, 89, 23);
+		btnEditar.setBounds(349, 425, 89, 23);
 		contentPane.add(btnEditar);
-		
+
+		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int selec = tabla.getSelectedRow();
+				if (selec >= 0) {
+					int confirm = JOptionPane.showConfirmDialog(Base.this,
+							"¿Estás seguro de eliminar el elemento seleccionado?",
+							"Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+					if (confirm == JOptionPane.YES_OPTION) {
+						sistema.getRaiz().getElementos().remove(selec);
+						JOptionPane.showMessageDialog(null, "Elemento eliminado satisfactoriamente.");
+						modeloElem.cargarDatos(sistema.getRaiz());
+						modeloElem.fireTableDataChanged();
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "No se seleccionó ningún elemento.");
+				}
+			}
+		});
+		btnEliminar.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
+		btnEliminar.setFocusable(false);
+		btnEliminar.setBounds(460, 425, 89, 23);
+		contentPane.add(btnEliminar);
+
 		JButton btnCrear = new JButton("Crear");
 		btnCrear.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					CrearElemento dialog = new CrearElemento(sistema.getRaiz(), modeloElem);
+					CrearElemento dialog = new CrearElemento(Base.this, sistema.getRaiz(), modeloElem);
 					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 					dialog.setVisible(true);	
 				} catch (Exception e) {
@@ -239,25 +279,6 @@ public class Base extends JFrame {
 		btnCrear.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		btnCrear.setBounds(10, 425, 89, 23);
 		contentPane.add(btnCrear);
-		
-		
-		
-		
-		
-		
-		
-/*
-				//inciso d
-				String extFichero = JOptionPane.showInputDialog(null, "Introduzca la extensión del archivo a buscar: ");
-				if (!extFichero.replaceAll(" ", "").equals("") && extFichero != null) {
-					String nomCarpeta = JOptionPane.showInputDialog(null, "Introduzca el nombre de la carpeta en la cual buscar: ");
-					String extCarpeta = JOptionPane.showInputDialog(null, "Introduzca la extensión de la carpeta en la cual buscar: ");
-					System.out.println("La cantidad de ficheros con extension " + extFichero + " en la primera carpeta encontrada"
-							+ " con extensión " + extCarpeta + " y nombre " + nomCarpeta + " es de: " +
-							sistema.getCantFicherosPrimCarpeta(extFichero, nomCarpeta, extCarpeta));
-				}
-				System.out.println("");
-*/
-				
+
 	}
 }
